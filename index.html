@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إشارة – مترجم لغة الإشارة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;500;700&display=swap">
+<style>
+:root{--bg:#0c1a22;--panel:#13262f;--ink:#eaf1ee;--mute:#8fa8aa;--line:#26424d;--acc:#f0b429;--acc2:#4fd1b5;--onacc:#1b1403;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#e8efed;--panel:#ffffff;--ink:#10252d;--mute:#587277;--line:#c9d8d6;--acc:#d9910a;--acc2:#0b8f78;--onacc:#ffffff}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Readex Pro",Tahoma,sans-serif}
+header{padding:18px 24px 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{margin:0;font-size:28px;font-weight:700}
+header p{margin:0;color:var(--mute);font-size:14px}
+main{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(330px,.8fr);gap:16px;padding:12px 24px 24px;max-width:1300px;margin:0 auto}
+@media(max-width:860px){main{grid-template-columns:1fr;padding:10px 14px 20px}}
+.stage{position:relative;border-radius:22px;overflow:hidden;min-height:460px;height:74vh;max-height:780px;
+background:radial-gradient(ellipse at 50% 38%,#2b5b68 0%,#12303b 55%,#0a161c 100%);border:1px solid var(--line)}
+.stage canvas{width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab}
+.cap{position:absolute;inset:auto 0 18px 0;text-align:center;pointer-events:none}
+.cap b{display:inline-block;min-width:140px;padding:10px 26px;border-radius:40px;background:rgba(8,18,22,.74);color:#fff;font-size:30px;font-weight:700;backdrop-filter:blur(6px);opacity:0;transition:opacity .2s}
+.cap b.on{opacity:1}
+.hint{position:absolute;top:12px;inset-inline:0;text-align:center;color:#a9c4c6;font-size:12px;pointer-events:none}
+.col{display:flex;flex-direction:column;gap:14px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+h2{margin:0 0 10px;font-size:17px;font-weight:700}
+textarea,input[type=text],select{width:100%;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:16px;padding:10px 12px}
+select option{color:#10252d}
+textarea{min-height:72px;resize:vertical;font-size:17px}
+textarea:focus,input:focus,select:focus,button:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.row>*{flex:0 0 auto}.row input[type=text]{flex:1 1 120px;width:auto}.row select{flex:1 1 120px;width:auto}
+button{font:inherit;font-size:15px;border-radius:12px;padding:10px 16px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+button.p{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:700}
+button.big{width:100%;padding:14px;font-size:18px;display:flex;align-items:center;justify-content:center;gap:10px}
+button.rec{background:#c0392b;border-color:#c0392b;color:#fff}
+.dot{width:12px;height:12px;border-radius:50%;background:currentColor;display:inline-block}
+.rec .dot{animation:pulse 1s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}100%{box-shadow:0 0 0 12px rgba(255,255,255,0)}}
+.interim{min-height:26px;margin-top:10px;color:var(--acc2);font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:34px}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--line);font-size:14px;color:var(--mute);background:transparent;cursor:default}
+.chip.ok{color:var(--ink);border-color:var(--acc2)}
+.chip.now{background:var(--acc2);color:#04231d;border-color:var(--acc2);font-weight:700}
+.chip.skip{text-decoration:line-through;opacity:.6}
+.vocab .chip{cursor:pointer;color:var(--ink)}
+.vocab .chip:hover{border-color:var(--acc)}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:14px;color:var(--acc2)}
+.small{font-size:13px;color:var(--mute);margin:8px 0 0;line-height:1.7}
+label.sp{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--mute);margin-top:10px}
+label.sp input{flex:1}
+.cam{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:4/3;display:none}
+.cam.on{display:block}
+.cam video,.cam canvas{position:absolute;inset:0;width:100%;height:100%;transform:scaleX(-1);object-fit:cover}
+.sent{min-height:44px;margin-top:10px;font-size:22px;font-weight:500;padding:8px 12px;border-radius:12px;border:1px dashed var(--line)}
+.status{font-size:13px;color:var(--acc);margin-top:8px;min-height:18px}
+@media(prefers-reduced-motion:reduce){.cap b{transition:none}.rec .dot{animation:none}}
+</style>
+</head>
+<body>
+<header><h1>إشارة</h1><p>ترجمة بين الكلام العربي ولغة الإشارة، بروبوت ثلاثي الأبعاد</p></header>
+<main>
+<div class="stage" id="stageBox">
+<canvas id="stage" aria-label="روبوت ثلاثي الأبعاد يؤدي الإشارة"></canvas>
+<div class="hint">اسحب الروبوت لتدويره</div>
+<div class="cap"><b id="cap"></b></div>
+</div>
+<div class="col">
+<section>
+<h2>من الصوت إلى إشارة</h2>
+<button class="p big" id="mic"><span class="dot"></span><span id="micTxt">سجّل صوتك</span></button>
+<div class="row"><select id="lang" aria-label="لهجة التعرف على الصوت">
+<option value="ar-EG">عربي – مصر</option><option value="ar-SA">عربي – السعودية</option><option value="ar-AE">عربي – الإمارات</option><option value="ar-JO">عربي – الأردن/الشام</option><option value="ar-MA">عربي – المغرب</option></select></div>
+<div class="interim" id="interim"></div>
+<textarea id="txt" placeholder="أو اكتب جملة هنا، مثلاً: صباح الخير ازيك شكرا"></textarea>
+<div class="row"><button class="p" id="go">ترجم لإشارة</button><button id="stop">إيقاف</button><button id="clear">مسح</button></div>
+<label class="sp">السرعة<input type="range" id="speed" min="0.6" max="1.8" step="0.1" value="1"><span id="spv">1×</span></label>
+<div class="chips" id="chips"></div>
+<div class="status" id="st1"></div>
+<details><summary>القاموس (<span id="vcount"></span> إشارة) – اضغط كلمة لتشوف إشارتها</summary><div class="chips vocab" id="vocab"></div></details>
+<details><summary>ضيف كلمة بديلة أو لهجتك</summary>
+<div class="row"><input type="text" id="aw" placeholder="الكلمة اللي تقولها"><select id="as"></select><button id="ab">اربط</button></div>
+<p class="small">مثلاً اربط "يا باشا" بإشارة "مرحبا". الكلمات المضافة بتتحفظ في المتصفح.</p>
+</details>
+</section>
+<section>
+<h2>من الكاميرا إلى كلام</h2>
+<div class="cam" id="camBox"><video id="vid" playsinline muted></video><canvas id="ov" width="640" height="480"></canvas></div>
+<div class="row"><button class="p" id="camBtn">شغّل الكاميرا</button><button id="say">انطق الجملة</button><button id="clr">امسح</button></div>
+<div class="sent" id="sent"></div>
+<p class="small">ارفع يدك أمام الكاميرا والأصابع لفوق. الإشارات المفهومة: كف مفتوح، كف مضموم، سبابة، إبهام مع سبابة وخنصر، إبهام لفوق.</p>
+<div class="status" id="st2"></div>
+</section>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const PI=Math.PI;
+
+/* ---------- مكتبة الإشارات ---------- */
+// مواضع اليد: [كتف أمام/خلف, كتف للخارج, كوع]
+const LOC={mouth:[-.6,.35,-2.5],chest:[-.6,.2,-1.7],head:[-.3,.5,-2.8],face:[-.5,.7,-2.6],fwd:[-1.2,.2,-.6],fwd2:[-1,.25,-1.3],side:[0,1,-1.2],low:[-.3,.2,-.7],up:[-.4,.6,-3]};
+// أشكال اليد: إبهام، سبابة، وسطى، بنصر، خنصر (0 مفرود .. 1 مقبوض)
+const SH={open:[0,0,0,0,0],fist:[1,1,1,1,1],point:[1,0,1,1,1],thumb:[0,1,1,1,1],ily:[0,0,1,1,0],y:[0,1,1,1,0],c:[.4,.4,.4,.4,.4],two:[1,0,0,1,1],claw:[.5,.5,.5,.5,.5],pinch:[.6,.6,1,1,1]};
+const pose=(l,s,y=0,r=0)=>[...LOC[l],y,r,...SH[s]];
+const REST=[0,.25,-.15,0,0,.25,.25,.3,.3,.3];
+const fr=(l,s,y,r,d,b)=>({a:pose(l,s,y,r),b:b==='m'?pose(l,s,y,r):REST,d:d||.5});
+const W=(l,s,y,r,b)=>[[l,s,y,0,.5,b],[l,s,y,r,.26,b],[l,s,y,-r,.26,b],[l,s,y,r,.26,b],[l,s,y,-r,.26,b]];
+const T=(l1,l2,s,y,b)=>[[l1,s,y,0,.45,b],[l2,s,y,0,.28,b],[l1,s,y,0,.28,b],[l2,s,y,0,.28,b]];
+const D=[
+['hello','مرحبا',['مرحبا','اهلا','اهلا وسهلا','هلا','سلام','السلام عليكم','هاي','هلو'],W('face','open',PI,.5)],
+['bye','مع السلامة',['وداعا','مع السلامه','باي','الى اللقاء','سلام عليك'],W('fwd2','open',0,.5)],
+['thanks','شكرا',['شكرا','متشكر','تسلم','يسلمو','ممنون','شكرا جزيلا'],[['mouth','open',0,0,.6],['fwd2','open',0,0,.7]]],
+['welcome','عفوا',['عفوا','العفو','اتفضل','تفضل','على الرحب'],[['fwd2','open',0,0,.45],['chest','open',0,0,.35],['fwd2','open',0,0,.5]]],
+['please','من فضلك',['من فضلك','لو سمحت','ارجوك','رجاء','ممكن'],W('chest','open',PI,.5)],
+['sorry','آسف',['اسف','معذره','سامحني','اعتذر','آسفه'],W('chest','fist',PI,.5)],
+['yes','نعم',['نعم','ايوه','ايوا','اه','اجل','طبعا','صح','موافق','حاضر','ماشي'],T('fwd2','fwd','fist',0)],
+['no','لا',['لا','مش','لن','ليس','مفيش','ابدا','لأ'],W('fwd2','point',0,.4)],
+['love','أحبك',['بحبك','احبك','حب','بحب','بحبكم','احبكم'],W('face','ily',PI,.15)],
+['howru','كيف حالك',['كيف حالك','ازيك','ازيكم','عامل ايه','اخبارك','ايه الاخبار','كيفك'],[['fwd2','open',0,0,.5,'m'],['fwd2','open',0,.5,.35,'m'],['fwd2','open',0,-.5,.35,'m']]],
+['fine','بخير',['بخير','الحمد لله','طيب','الحمدلله'],[['fwd2','thumb',0,0,.8]]],
+['good','جيد',['جيد','كويس','حلو','ممتاز','رائع','تمام','عظيم'],[['fwd2','thumb',0,0,.5],['fwd','thumb',0,0,.5]]],
+['bad','سيئ',['سيء','سيئ','وحش','مش كويس','سيئه'],[['fwd2','point',0,0,.4],['low','point',0,0,.7]]],
+['happy','سعيد',['سعيد','سعيده','فرحان','مبسوط','فرح'],T('chest','head','open',PI)],
+['sad','حزين',['حزين','زعلان','حزينه','زعل'],[['head','open',PI,0,.4],['chest','open',PI,0,.7],['low','open',PI,0,.5]]],
+['me','أنا',['انا','اني','انى'],[['chest','point',PI,0,.7]]],
+['you','أنت',['انت','انتي','انتم','حضرتك','انتو'],[['fwd','point',0,0,.7]]],
+['name','اسم',['اسم','اسمي','اسمك','اسمى'],T('fwd2','fwd','two',0,'m')],
+['water','ماء',['ماء','مياه','ميه','مايه','ماي','عطشان'],[['mouth','c',0,0,.8]]],
+['eat','أكل',['اكل','ياكل','طعام','جعان','اكلت','وجبه','اكله'],[['mouth','pinch',0,0,.4],['mouth','pinch',0,.3,.3],['mouth','pinch',0,0,.3],['mouth','pinch',0,.3,.3]]],
+['drink','شرب',['شرب','اشرب','يشرب','عصير','شاي','قهوه'],[['mouth','c',0,0,.4],['mouth','c',0,.5,.5],['mouth','c',0,0,.4]]],
+['sleep','نوم',['نوم','نايم','انام','ينام','نعسان'],[['face','open',PI,0,.5],['head','fist',PI,0,.8]]],
+['home','بيت',['بيت','منزل','دار','شقه'],[['head','open',0,.35,.9,'m']]],
+['school','مدرسة',['مدرسه','جامعه','فصل','كليه'],T('chest','fwd2','open',0,'m')],
+['learn','تعلم',['تعلم','اتعلم','دراسه','ادرس','يتعلم','علم','معلم'],[['head','open',PI,0,.4],['head','pinch',PI,0,.5]]],
+['understand','فهمت',['فهمت','افهم','فاهم','فهم','اعرف','عارف'],[['head','point',PI,0,.4],['head','point',PI,.5,.35]]],
+['notunderstand','لم أفهم',['مش فاهم','لم افهم','ما فهمت','مش فاهمه','مفهمتش'],[['head','point',PI,0,.4],['fwd2','open',0,.5,.35],['fwd2','open',0,-.5,.35]]],
+['help','مساعدة',['مساعده','ساعدني','ساعد','عاون','نجده'],[['low','open',0,0,.4,'m'],['chest','open',0,0,.6,'m']]],
+['want','أريد',['اريد','عايز','عاوز','ابغي','بدي','محتاج','احتاج','نفسي'],[['fwd2','claw',0,0,.4],['chest','claw',0,0,.6]]],
+['dontwant','لا أريد',['مش عايز','مش عاوز','لا اريد','ما بدي','مش محتاج'],[['fwd2','claw',0,0,.4],['side','open',0,.5,.35],['side','open',0,-.5,.35]]],
+['come','تعال',['تعال','تعالي','تعالى','اقترب'],[['fwd','point',0,0,.4],['chest','point',0,0,.6]]],
+['go','اذهب',['اذهب','روح','امشي','مشي','ذهب','رايح','اروح'],[['chest','point',0,0,.4],['fwd','point',0,0,.6]]],
+['stop','قف',['قف','وقف','توقف','كفايه','بس'],[['fwd2','open',0,0,.9]]],
+['wait','انتظر',['انتظر','استنى','استني','لحظه','ثواني','دقيقه'],W('fwd2','open',0,.3)],
+['where','أين',['اين','فين','وين','مكان'],W('fwd2','point',0,.4)],
+['what','ماذا',['ماذا','ايه','شو','اش'],[['fwd2','open',0,.5,.35],['fwd2','open',0,-.5,.35],['fwd2','open',0,.5,.35]]],
+['why','لماذا',['لماذا','ليه','ليش'],[['head','point',PI,0,.4],['fwd2','y',0,.3,.5]]],
+['howmuch','كم',['كم','بكام','بكم'],W('fwd2','claw',0,.4)],
+['time','وقت',['وقت','ساعه','موعد'],[['chest','point',PI,0,.5],['chest','point',PI,.3,.3],['chest','point',PI,0,.3]]],
+['today','اليوم',['اليوم','النهارده','دلوقتي','الان','حاليا','دلوقت'],[['low','open',0,0,.5,'m'],['low','open',0,.3,.4,'m']]],
+['tomorrow','غدًا',['غدا','بكره','بكرا','باكر'],[['chest','thumb',0,0,.4],['fwd','thumb',0,0,.6]]],
+['yesterday','أمس',['امس','امبارح','البارحه'],[['chest','thumb',0,0,.4],['head','thumb',PI,0,.6]]],
+['doctor','طبيب',['طبيب','دكتور','دكتوره','طبيبه','حكيم'],[['low','two',0,0,.9]]],
+['hospital','مستشفى',['مستشفي','عياده','اسعاف'],[['head','two',0,0,.4],['chest','two',0,0,.5]]],
+['sick','مريض',['مريض','مريضه','عيان','وجع','الم','تعبان','مرض'],[['head','open',PI,0,.4],['chest','fist',PI,0,.7]]],
+['father','أب',['اب','ابي','بابا','والدي','ابويا','ابوي','ابوك'],[['head','thumb',0,0,.8]]],
+['mother','أم',['ام','امي','ماما','والدتي','امك','والدتك'],[['mouth','thumb',0,0,.8]]],
+['sibling','أخ',['اخ','اخي','اخويا','اخت','اختي','اخوك'],[['chest','point',0,0,.4],['fwd2','point',0,0,.5]]],
+['friend','صديق',['صديق','صاحبي','صديقي','صاحب','صديقه','صحاب'],[['chest','point',0,0,.4,'m'],['fwd2','point',0,0,.5,'m']]],
+['family','عائلة',['عائله','اسره','عيله','اهل','اهلي'],[['chest','open',0,0,.4,'m'],['fwd2','open',0,.3,.5,'m']]],
+['work','عمل',['عمل','شغل','اشتغل','وظيفه','يعمل'],T('chest','fwd','fist',0,'m')],
+['money','فلوس',['فلوس','مال','نقود','جنيه','دولار','ريال'],[['fwd2','pinch',0,0,.4],['fwd2','pinch',0,.4,.3],['fwd2','pinch',0,0,.3]]],
+['car','سيارة',['سياره','عربيه','عربيتي','سيارتي'],[['chest','fist',0,0,.4,'m'],['chest','fist',0,.3,.3,'m'],['chest','fist',0,-.3,.3,'m']]],
+['book','كتاب',['كتاب','كتب','مصحف','دفتر'],[['chest','open',PI,0,.5,'m'],['chest','open',PI,.5,.4,'m']]],
+['phone','هاتف',['تليفون','موبايل','هاتف','اتصل','جوال','اتصال','كلمني'],[['head','y',PI,0,.9]]],
+['beautiful','جميل',['جميل','جميله','حلوه','جمال','وسيم'],[['face','open',PI,.4,.4],['face','open',PI,-.4,.4],['mouth','pinch',0,0,.4]]],
+['big','كبير',['كبير','ضخم','كبيره','عظيم'],[['chest','open',0,0,.4,'m'],['side','open',0,0,.6,'m']]],
+['small','صغير',['صغير','صغيره','قليل','شويه'],[['low','pinch',0,0,.6,'m']]]
+];
+const SIGNS={};D.forEach(([id,ar,k,f])=>SIGNS[id]={ar,k,f:f.map(x=>fr(...x))});
+
+const norm=s=>s.replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[؟?!.,،؛:"']/g,' ').replace(/\s+/g,' ').trim();
+const KEY={};
+function reg(w,id){const n=norm(w);if(!n)return;KEY[n]=id;KEY[n.replace(/(^| )ال/g,'$1')]=id}
+Object.entries(SIGNS).forEach(([id,s])=>{s.k.forEach(w=>reg(w,id));reg(s.ar,id)});
+let ALIAS={};try{ALIAS=JSON.parse(localStorage.getItem('sig_alias')||'{}')}catch(e){}
+Object.entries(ALIAS).forEach(([w,id])=>{if(SIGNS[id])reg(w,id)});
+function parse(text){
+ const ws=norm(text).split(' ').filter(Boolean),ids=[],skipped=[];
+ for(let i=0;i<ws.length;){
+  let hit=null,len=1;
+  for(let L=Math.min(3,ws.length-i);L>=1&&!hit;L--){
+   const ph=ws.slice(i,i+L).join(' '),alt=ph.replace(/(^| )ال/g,'$1'),alt2=L===1?ph.replace(/^و(?=..)/,''):'';
+   hit=KEY[ph]||KEY[alt]||(alt2&&KEY[alt2])||null;if(hit)len=L;
+  }
+  if(hit){if(ids[ids.length-1]!==hit)ids.push(hit)}else skipped.push(ws[i]);
+  i+=len;
+ }
+ return {ids,skipped};
+}
+
+/* ---------- المشهد ثلاثي الأبعاد: الروبوت ---------- */
+const cv=$('stage'),R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.1;
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(36,1,.1,60);
+cam.position.set(0,1.5,7);cam.lookAt(0,1.45,0);
+scene.add(new THREE.HemisphereLight(0xdff3ff,0x1d3038,.95));
+const key=new THREE.DirectionalLight(0xffffff,1.35);key.position.set(2.5,5,4.5);key.castShadow=true;key.shadow.mapSize.set(2048,2048);
+Object.assign(key.shadow.camera,{left:-2.5,right:2.5,top:3.5,bottom:-1,near:1,far:14});key.shadow.bias=-.0004;scene.add(key);
+const rim=new THREE.DirectionalLight(0x4fd1b5,1.2);rim.position.set(-3,2.5,-3);scene.add(rim);
+const mat=(c,r,m)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m||0});
+const mWhite=mat(0xf3f6fb,.28,.05),mNavy=mat(0x172845,.3,.3),mBlue=mat(0x55b9e6,.35,.1);
+const mTeal=new THREE.MeshBasicMaterial({color:0x4fe6cf}),mOut=new THREE.MeshBasicMaterial({color:0x172845,side:THREE.BackSide});
+function mesh(g,m,x,y,z,ol){const o=new THREE.Mesh(g,m);o.position.set(x||0,y||0,z||0);o.castShadow=o.receiveShadow=true;
+ if(ol){const h=new THREE.Mesh(g,mOut);h.scale.setScalar(ol);o.add(h)}return o}
+const robot=new THREE.Group();scene.add(robot);
+const shadow=new THREE.Mesh(new THREE.CircleGeometry(1,48),new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.3}));
+shadow.rotation.x=-PI/2;shadow.position.y=.02;scene.add(shadow);
+const body=new THREE.Group();robot.add(body);
+const torso=mesh(new THREE.SphereGeometry(1,48,32),mWhite,0,.98,0,1.04);torso.scale.set(.52,.68,.46);body.add(torso);
+const ring=new THREE.Mesh(new THREE.TorusGeometry(.14,.024,12,40),mTeal);ring.position.set(0,1.1,.45);body.add(ring);
+const belly=new THREE.Mesh(new THREE.TorusGeometry(.3,.012,8,40,PI),mBlue);belly.position.set(0,.8,.34);belly.rotation.z=PI;belly.scale.set(1,.6,1);body.add(belly);
+body.add(mesh(new THREE.CylinderGeometry(.17,.2,.12,24),mNavy,0,1.66,0));
+const head=new THREE.Group();head.position.y=2;body.add(head);
+const hd=mesh(new THREE.SphereGeometry(.4,56,40),mWhite,0,0,0,1.04);hd.scale.set(1.1,.96,.98);head.add(hd);
+const visor=mesh(new THREE.SphereGeometry(1,40,28),mNavy,0,0,.31);visor.scale.set(.31,.21,.12);head.add(visor);
+[-1,1].forEach(s=>{const cup=mesh(new THREE.CylinderGeometry(.12,.12,.09,28),mBlue,s*.46,0,0,1.08);cup.rotation.z=PI/2;head.add(cup)});
+const band=new THREE.Mesh(new THREE.TorusGeometry(.44,.012,8,40,PI*.55),mBlue);band.position.set(0,0,.02);band.rotation.z=PI*.225;head.add(band);
+const topArc=new THREE.Mesh(new THREE.TorusGeometry(.17,.011,8,24,PI*.7),mBlue);topArc.position.set(0,.2,.33);topArc.rotation.set(-.55,0,PI*.15);head.add(topArc);
+const eyes=new THREE.Group();eyes.position.set(0,.03,.435);head.add(eyes);
+[-1,1].forEach(s=>{const e=new THREE.Mesh(new THREE.TorusGeometry(.055,.014,8,20,PI),mTeal);e.position.x=s*.12;eyes.add(e)});
+const smile=new THREE.Mesh(new THREE.TorusGeometry(.05,.012,8,20,PI),mTeal);smile.rotation.z=PI;smile.position.set(0,-.07,.432);head.add(smile);
+
+function finger(x,y,L,thumb){
+ const g=new THREE.Group();g.position.set(x,y,0);const parts=thumb?[.55,.45]:[.45,.3,.25],J=[];let p=g;
+ parts.forEach((q,i)=>{const len=L*q,j=new THREE.Group();if(i)j.position.y=-L*parts[i-1];p.add(j);
+  j.add(mesh(new THREE.CylinderGeometry(.027,.025,len,12),mWhite,0,-len/2,0,1.2));j.add(mesh(new THREE.SphereGeometry(.027,12,10),mWhite,0,0,0,1.2));J.push(j);p=j});
+ return {g,J,thumb};
+}
+function makeArm(s){
+ const sho=new THREE.Group();sho.position.set(s*.52,1.36,0);body.add(sho);
+ sho.add(mesh(new THREE.SphereGeometry(.12,24,16),mWhite,0,0,0,1.1));
+ sho.add(mesh(new THREE.CylinderGeometry(.085,.075,.5,24),mWhite,0,-.25,0,1.1));
+ const el=new THREE.Group();el.position.y=-.5;sho.add(el);
+ el.add(mesh(new THREE.SphereGeometry(.08,20,14),mNavy));
+ el.add(mesh(new THREE.CylinderGeometry(.07,.058,.46,24),mWhite,0,-.23,0,1.1));
+ const hand=new THREE.Group();hand.position.y=-.46;hand.scale.setScalar(1.3);el.add(hand);
+ hand.add(mesh(new THREE.CylinderGeometry(.06,.06,.05,20),mNavy,0,0,0));
+ const palm=mesh(new THREE.SphereGeometry(1,24,16),mWhite,0,-.13,0,1.08);palm.scale.set(.125,.135,.055);hand.add(palm);
+ const fs=[finger(-s*.125,-.1,.15,true)],L=[.19,.21,.19,.15],X=[.075,.025,-.025,-.075];
+ X.forEach((x,i)=>fs.push(finger(-s*x,-.25,L[i])));
+ fs.forEach(f=>hand.add(f.g));
+ return {s,sho,el,hand,fs};
+}
+const armA=makeArm(-1),armB=makeArm(1);
+const CK=[1.4,1.5,1.2],TK=[.9,1];
+function apply(a,v){
+ a.sho.rotation.x=v[0];a.sho.rotation.z=v[1]*a.s;a.el.rotation.x=v[2];a.hand.rotation.set(0,v[3],v[4]*a.s);
+ a.fs.forEach((f,i)=>{const c=v[5+i];f.J.forEach((j,k)=>j.rotation.x=-c*(f.thumb?TK[k]:CK[k]));
+  if(f.thumb)f.g.rotation.z=-a.s*(.6-.5*c)});
+}
+let curA=REST.slice(),curB=REST.slice(),tgtA=REST,tgtB=REST;
+let drag=null,yaw=0;
+cv.addEventListener('pointerdown',e=>{drag=e.clientX;cv.setPointerCapture(e.pointerId)});
+cv.addEventListener('pointermove',e=>{if(drag!=null){yaw=Math.max(-.9,Math.min(.9,yaw+(e.clientX-drag)*.006));drag=e.clientX}});
+cv.addEventListener('pointerup',()=>drag=null);
+function resize(){const b=$('stageBox');R.setSize(b.clientWidth,b.clientHeight,false);cam.aspect=b.clientWidth/b.clientHeight;cam.fov=cam.aspect<.8?48:36;cam.updateProjectionMatrix()}
+new ResizeObserver(resize).observe($('stageBox'));resize();
+
+/* ---------- التشغيل (قائمة انتظار تقبل الإضافة أثناء التسجيل) ---------- */
+let q=[],qi=-1,qt=0,chipN=0,speed=1;const cap=$('cap');
+function setT(){const f=q[qi];tgtA=f.a;tgtB=f.b;cap.textContent=f.id?SIGNS[f.id].ar:'';cap.classList.toggle('on',!!f.id);
+ document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('now',!!f.id&&c.dataset.i==f.n))}
+function enqueue(ids){
+ if(!ids.length)return;
+ const active=qi>=0,wasRest=active&&qi===q.length-1&&q[qi].rest;
+ if(active&&q[q.length-1].rest)q.pop();
+ if(!active){q=[];qt=0}
+ ids.forEach((id,i)=>{if(q.length)q.push({a:REST,b:REST,d:.12,gap:1});SIGNS[id].f.forEach(f=>q.push({...f,id,n:chipN+i}))});
+ q.push({a:REST,b:REST,d:.6,rest:1});
+ chipN+=ids.length;
+ if(!active){qi=0;setT()}else if(wasRest){qt=0;setT()}
+}
+function stopPlay(){qi=-1;q=[];tgtA=tgtB=REST;cap.classList.remove('on');document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('now'))}
+function addChips(ids,skipped){
+ $('chips').insertAdjacentHTML('beforeend',ids.map((id,i)=>`<span class="chip ok" data-i="${chipN+i}">${SIGNS[id].ar}</span>`).join('')+skipped.map(w=>`<span class="chip skip">${w}</span>`).join(''));
+}
+function feed(text){
+ const {ids,skipped}=parse(text);addChips(ids,skipped);enqueue(ids);
+ $('st1').textContent=ids.length?(skipped.length?'في كلمات لسه معندهاش إشارة (مشطوبة). تقدر تربطها بإشارة من "ضيف كلمة بديلة".':''):'مفيش كلمة معروفة في الجملة دي.';
+}
+const clock=new THREE.Clock();let nextBlink=2;
+(function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;
+ if(qi>=0){qt+=dt;if(qt>=q[qi].d/speed){qi++;qt=0;if(qi>=q.length)stopPlay();else setT()}}
+ const k=1-Math.exp(-dt*9);for(let i=0;i<10;i++){curA[i]+=(tgtA[i]-curA[i])*k;curB[i]+=(tgtB[i]-curB[i])*k}
+ apply(armA,curA);apply(armB,curB);
+ const bob=Math.sin(t*1.5)*.07;robot.position.y=.14+bob;const ss=1-bob*.9;shadow.scale.set(.85*ss,.85*ss,1);shadow.material.opacity=.3-bob*.6;
+ head.rotation.y=Math.sin(t*.5)*.06+yaw*.25;head.rotation.z=Math.sin(t*.8)*.025;head.rotation.x=Math.sin(t*.7)*.02+(qi>=0?.05:0);
+ if(t>nextBlink){eyes.scale.y=.12;if(t>nextBlink+.12){eyes.scale.y=1;nextBlink=t+2+Math.random()*3}}
+ body.rotation.y+=(yaw-body.rotation.y)*.1;R.render(scene,cam)})();
+
+/* ---------- القاموس والواجهة ---------- */
+$('vcount').textContent=Object.keys(SIGNS).length;
+$('vocab').innerHTML=Object.entries(SIGNS).map(([id,s])=>`<span class="chip" data-id="${id}">${s.ar}</span>`).join('');
+$('vocab').addEventListener('click',e=>{const id=e.target.dataset&&e.target.dataset.id;if(id){stopPlay();chipN=0;$('chips').innerHTML='';addChips([id],[]);enqueue([id])}});
+$('as').innerHTML=Object.entries(SIGNS).map(([id,s])=>`<option value="${id}">${s.ar}</option>`).join('');
+$('ab').onclick=()=>{const w=$('aw').value.trim(),id=$('as').value;if(!w)return;reg(w,id);ALIAS[w]=id;
+ try{localStorage.setItem('sig_alias',JSON.stringify(ALIAS))}catch(e){}
+ $('st1').textContent='تم ربط "'+w+'" بإشارة "'+SIGNS[id].ar+'".';$('aw').value=''};
+$('speed').oninput=e=>{speed=+e.target.value;$('spv').textContent=speed+'×'};
+$('go').onclick=()=>{stopPlay();chipN=0;$('chips').innerHTML='';feed($('txt').value)};
+$('stop').onclick=stopPlay;
+$('clear').onclick=()=>{stopPlay();chipN=0;$('chips').innerHTML='';$('txt').value='';$('interim').textContent='';$('st1').textContent=''};
+
+/* ---------- تسجيل الصوت المستمر ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null,live=false;
+function micUI(on){$('mic').classList.toggle('rec',on);$('micTxt').textContent=on?'إيقاف التسجيل':'سجّل صوتك'}
+function startRec(){
+ rec=new SR();rec.lang=$('lang').value;rec.continuous=true;rec.interimResults=true;
+ rec.onstart=()=>{micUI(true);$('st1').textContent='بسمعك... اتكلم وهترجمه الإشارة فوراً.'};
+ rec.onresult=e=>{let fin='',itm='';
+  for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript+' ';else itm+=r[0].transcript}
+  $('interim').textContent=itm;
+  if(fin.trim()){$('txt').value=($('txt').value+' '+fin).trim();feed(fin)}};
+ rec.onerror=e=>{
+  if(e.error==='not-allowed'||e.error==='service-not-allowed'){live=false;$('st1').textContent='الميكروفون ممنوع. اسمح بالوصول له من إعدادات المتصفح (ولازم الصفحة تتفتح على https أو localhost).'}
+  else if(e.error==='audio-capture'){live=false;$('st1').textContent='مفيش ميكروفون متوصل.'}
+  else if(e.error==='network'){live=false;$('st1').textContent='التعرف على الصوت محتاج إنترنت.'}};
+ rec.onend=()=>{if(live){try{startRec()}catch(e){live=false;micUI(false)}}else{micUI(false);$('interim').textContent=''}};
+ rec.start();
+}
+$('mic').onclick=()=>{
+ if(!SR){$('st1').textContent='المتصفح ده مبيدعمش التعرف على الصوت. استخدم Chrome أو Edge، أو اكتب الجملة.';return}
+ if(live){live=false;rec&&rec.stop();return}
+ stopPlay();chipN=0;$('chips').innerHTML='';$('txt').value='';live=true;
+ try{startRec()}catch(e){live=false;$('st1').textContent='تعذّر بدء التسجيل.'}
+};
+
+/* ---------- الكاميرا إلى كلام ---------- */
+let words=[],stream=null,hands=null,running=false,last='',cnt=0,lastAdd=0;
+const sent=$('sent'),st2=$('st2'),ov=$('ov'),oc=ov.getContext('2d');
+const LABEL={'11111':'hello','01111':'thanks','00000':'yes','01000':'no','11001':'love','10000':'good','10001':'phone'};
+function classify(lm){
+ const up=(t,p)=>lm[t].y<lm[p].y-.02;
+ const e=[Math.abs(lm[4].x-lm[17].x)>Math.abs(lm[3].x-lm[17].x)+.03,up(8,6),up(12,10),up(16,14),up(20,18)];
+ return LABEL[e.map(Number).join('')]||null;
+}
+function onRes(r){
+ oc.clearRect(0,0,640,480);const lm=r.multiHandLandmarks&&r.multiHandLandmarks[0];
+ if(!lm){cnt=0;last='';return}
+ oc.fillStyle='#f0b429';lm.forEach(p=>{oc.beginPath();oc.arc(p.x*640,p.y*480,4,0,7);oc.fill()});
+ const id=classify(lm);
+ if(id&&id===last)cnt++;else{last=id;cnt=0}
+ if(id&&cnt===8&&(performance.now()-lastAdd>1400)){words.push(SIGNS[id].ar);lastAdd=performance.now();sent.textContent=words.join(' ')}
+}
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+$('camBtn').onclick=async()=>{
+ if(running){running=false;stream&&stream.getTracks().forEach(t=>t.stop());$('camBox').classList.remove('on');$('camBtn').textContent='شغّل الكاميرا';return}
+ try{stream=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480,facingMode:'user'}});$('vid').srcObject=stream;await $('vid').play();$('camBox').classList.add('on')}
+ catch(e){st2.textContent='الكاميرا مش متاحة. اسمح بالوصول لها أو افتح الصفحة في تبويب مستقل.';return}
+ st2.textContent='بحمّل نموذج تتبع اليد...';
+ try{
+  if(!window.Hands)await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js');
+  hands=new Hands({locateFile:f=>'https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/'+f});
+  hands.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:.6,minTrackingConfidence:.5});
+  hands.onResults(onRes);await hands.initialize();
+ }catch(e){st2.textContent='تعذّر تحميل نموذج تتبع اليد من هنا. الكاميرا شغالة بس من غير ترجمة.';return}
+ st2.textContent='جاهز. ارفع يدك قدام الكاميرا.';running=true;$('camBtn').textContent='أوقف الكاميرا';
+ (async function tick(){if(!running)return;try{if($('vid').readyState>=2)await hands.send({image:$('vid')})}catch(e){}requestAnimationFrame(tick)})();
+};
+$('say').onclick=()=>{if(!words.length)return;const u=new SpeechSynthesisUtterance(words.join(' '));u.lang='ar-SA';speechSynthesis.cancel();speechSynthesis.speak(u)};
+$('clr').onclick=()=>{words=[];sent.textContent=''};
+</script>
+</body>
+</html>
